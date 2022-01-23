@@ -78,8 +78,8 @@ clean:
 # list based targets
 # ------------------------------------------------------------------------------
 %.exe: $(OBJS_RS) $(RESS_RS) $(LIBS)
-#	@$(AWK) -f $(RES_PATH)/build.awk $(RES_PATH)/build.num > $(TMP_PATH)/build.num
-#	@$(CP) -f $(TMP_PATH)/build.num $(RES_PATH)/build.num
+	@$(AWK) -f $(RES_PATH)/build.awk $(RES_PATH)/build.num > $(TMP_PATH)/build.num
+	@$(CP) -f $(TMP_PATH)/build.num $(RES_PATH)/build.num
 	@echo ld $@
 	@$(LD) $(CC_OPT) -o $@ $^
 
