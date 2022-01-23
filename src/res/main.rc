@@ -1,0 +1,36 @@
+
+#include <windows.h>
+#include "main.h"
+#include "res/build.num"
+
+#define STR(s)      XSTR(s)
+#define XSTR(s)     #s
+
+1 VERSIONINFO
+FILEVERSION MAJOR_VER, MINOR_VER, PATCH_VER, BUILD_NUM
+FILEOS VOS__WINDOWS32
+FILETYPE VFT_APP
+{
+    BLOCK "StringFileInfo"
+    {
+        BLOCK "080904E4"
+        {
+            VALUE "Author", AUTHOR "\0"
+            VALUE "CompanyName", COMPANY "\0"
+            VALUE "FileDescription", PROD_NAME " - " PROD_DESCR "\0"
+            VALUE "FileVersion", STR(BUILD_NUM) "\0"
+            VALUE "InternalName", PROD_NAME "\0"
+            VALUE "LegalCopyright", COMPANY ", " CPYR_YEAR "\0"
+            VALUE "OriginalFilename", PROD_NAME ".exe\0"
+            VALUE "ProductName", PROD_NAME "\0"
+            VALUE "ProductVersion", STR(MAJOR_VER) "." STR(MINOR_VER) " [" STR(BUILD_NUM) "]\0"
+        }
+    }
+
+    BLOCK "VarFileInfo"
+    {
+        VALUE "Translation", 0x0809, 0x04E4
+    }
+}
+
+MAIN_ICON	ICON    "main.ico"
