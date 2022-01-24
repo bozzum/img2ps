@@ -1,6 +1,6 @@
-TARGET		= png2ps.exe
-OBJS		= main.o lodepng.o chromaproc.o analyse.o \
-			  lumaproc.o emitstats.o dither.o emitps.o
+TARGET		= img2ps.exe
+OBJS		= main.o lodepng.o jpgd.o loadfile.o chromaproc.o \
+			  analyse.o lumaproc.o emitstats.o dither.o emitps.o
 RESS		= main.ro
 LIBS		=
 CC_OPT		= -DLODEPNG_NO_COMPILE_ENCODER

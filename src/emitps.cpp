@@ -34,7 +34,7 @@ emitPs(FILE* out, Img img, int pxPerIn, int border)
 
 	fprintf(out, "%%!PS-Adobe-3.0\n");
 	fprintf(out, "%%%%BoundingBox: %.4f %.4f %.4f %.4f\n", l, t, w, h);
-	fprintf(out, "%%%%Creator: Pat's png2ps dither tool\n");
+	fprintf(out, "%%%%Creator: Pat's img2ps dither tool\n");
 	fprintf(out, "%%%%CreationDate: %s", now);
 	fprintf(out, "%%%%DocumentData: Clean7Bit\n");
 	fprintf(out, "%%%%LanguageLevel: 2\n");

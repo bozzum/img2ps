@@ -1,9 +1,9 @@
 
 #pragma once
 
-#define APPNAME			"png2ps"
+#define APPNAME			"img2ps"
 #define PROD_NAME		APPNAME
-#define PROD_DESCR		"Pat's PNG to PS dither tool"
+#define PROD_DESCR		"Pat's Image to PostScript dither tool"
 #define MAJOR_VER		0
 #define MINOR_VER		1
 #define PATCH_VER		0

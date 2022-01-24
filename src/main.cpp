@@ -1,7 +1,6 @@
 
 #include <getopt.h>
-#include "lodepng.h"
-#include "chromaproc.h"
+#include "loadfile.h"
 #include "analyse.h"
 #include "lumaproc.h"
 #include "emitstats.h"
@@ -13,7 +12,7 @@ static void
 printUsage()
 {
 	fprintf(stderr,
-		"Usage: " APPNAME " [options] <png-file>\n"
+		"Usage: " APPNAME " [options] <img-file>\n"
 		"\n -b num\tBorder width [default: 0]"
 		"\n -c algo\tChroma algorithm: I [default: I]"
 		"\n -d algo\tDither algorithm: TH, FS, JJN, SI [default: JJN]"
@@ -63,24 +62,14 @@ main(int argc, char** argv)
 
 	// .........................................................................
 
-	std::vector<unsigned char> image;
-	unsigned width, height;
-
-	auto rc = lodepng::decode(image, width, height, fname);
-	if(rc) {
-		fprintf(stderr, "PNG decode error: %s -- Aborting..", lodepng_error_text(rc));
+	int width = 0, height = 0;
+	auto buf = loadFile(fname, chromaAlgo, width, height);
+	if(not buf) {
+		fprintf(stderr, "Image decode error -- Aborting..");
 		return 3;
 	}
 
-	// .........................................................................
-
-	Img img = { new int[width * height], (int)width, (int)height };
-
-	// Chroma to luma conversion
-	if(chromaConv(image.data(), img, chromaAlgo)) {
-		fprintf(stderr, "Unrecognised chroma algorithm '%s' -- Aborting..", chromaAlgo.c_str());
-		return 4;
-	}
+	Img img = { buf, width, height };
 
 	// .........................................................................
 
@@ -117,6 +106,8 @@ main(int argc, char** argv)
 	// .........................................................................
 
 	emitPs(out, img, ppi, border);
+
+	free(buf);
 
 	return 0;
 }
