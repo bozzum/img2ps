@@ -1,10 +1,11 @@
 
+#include <stdexcept>
 #include "lodepng.h"
 #include "jpgd.h"
 #include "chromaproc.h"
 #include "loadfile.h"
 
-int* loadFile(std::string path, std::string algo, int& width, int& height)
+int* loadFile(std::string& path, std::string& algo, int& width, int& height)
 {
 	int* buf = nullptr;
 
@@ -20,7 +21,7 @@ int* loadFile(std::string path, std::string algo, int& width, int& height)
 
 			auto rc = lodepng::decode(image, w, h, path);
 			if(rc)
-				throw;
+				throw std::runtime_error("Failed to load PNG file");
 
 			width = w;
 			height = h;
@@ -30,13 +31,13 @@ int* loadFile(std::string path, std::string algo, int& width, int& height)
 
 			// Chroma to luma conversion
 			if(chromaConv(image.data(), img, algo))
-				throw;
+				throw std::runtime_error("Failed to perform colour conversion");
 
 		} else if(ext == ".jpg" or ext == ".jpeg") {
 			int w, h, c;
 			auto bbuf = jpgd::decompress_jpeg_image_from_file(path.c_str(), &w, &h, &c, 1);
 			if(not bbuf)
-				throw;
+				throw std::runtime_error("Failed to load JPEG file");
 
 			width = w;
 			height = h;

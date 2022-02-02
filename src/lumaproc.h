@@ -4,4 +4,4 @@
 #include "main.h"
 #include "analyse.h"
 
-int stretch(Img& img, Stat& stat);
+int stretch(Img& img, const Stat& stat);
