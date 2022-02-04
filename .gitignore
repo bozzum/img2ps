@@ -1,2 +1,4 @@
 bin/
 tmp/
+img2ps-cppcheck-build-dir/
+img2ps.cppcheck

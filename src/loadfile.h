@@ -4,4 +4,4 @@
 #include <string>
 #include "main.h"
 
-int* loadFile(std::string path, std::string algo, int& width, int& height, int ppi);
+int* loadFile(const std::string& path, std::string& algo, int& width, int& height, int ppi);

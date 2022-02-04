@@ -3,7 +3,7 @@
 #include "analyse.h"
 
 int
-analyse(Img& img, Stat& stat)
+analyse(const Img& img, Stat& stat)
 {
 	stat = {};
 	auto area = img.w * img.h;

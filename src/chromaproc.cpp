@@ -3,7 +3,7 @@
 #include "chromaproc.h"
 
 int
-chromaConv(uint8_t* pSrc, Img& dst, std::string algo)
+chromaConv(uint8_t* pSrc, Img& dst, std::string& algo)
 {
 	if(algo == "I") {
 		auto area = dst.w * dst.h;

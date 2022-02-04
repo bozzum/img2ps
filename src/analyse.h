@@ -17,4 +17,4 @@ typedef struct {
 	int						maxCnt	= {0};
 } Stat;
 
-int analyse(Img& img, Stat& stat);
+int analyse(const Img& img, Stat& stat);
