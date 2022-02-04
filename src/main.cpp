@@ -13,6 +13,11 @@ printUsage()
 {
 	fprintf(stderr,
 		"Usage: " APPNAME " [options] <img-file>\n"
+		"\nImg-File:"
+		"\n *.png\tPNG image"
+		"\n *.jpg/jpeg\tJPEG image"
+		"\n ::test\tinternale test pattern"
+		"\nOptions:"
 		"\n -b num\tBorder width [default: 0]"
 		"\n -c algo\tChroma algorithm: I [default: I]"
 		"\n -d algo\tDither algorithm: TH, FS, JJN, SI [default: JJN]"
@@ -63,7 +68,7 @@ main(int argc, char** argv)
 	// .........................................................................
 
 	int width = 0, height = 0;
-	auto buf = loadFile(fname, chromaAlgo, width, height);
+	auto buf = loadFile(fname, chromaAlgo, width, height, ppi);
 	if(not buf) {
 		fprintf(stderr, "Image decode error -- Aborting..");
 		return 3;

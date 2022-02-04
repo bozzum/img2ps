@@ -4,7 +4,7 @@
 #include "chromaproc.h"
 #include "loadfile.h"
 
-int* loadFile(std::string path, std::string algo, int& width, int& height)
+int* loadFile(std::string path, std::string algo, int& width, int& height, int ppi)
 {
 	int* buf = nullptr;
 
@@ -25,7 +25,7 @@ int* loadFile(std::string path, std::string algo, int& width, int& height)
 			width = w;
 			height = h;
 
-			buf = (int*)malloc(width * height * sizeof(int));
+			buf = (int*)calloc(width * height, sizeof(int));
 			Img img = { buf, width, height };
 
 			// Chroma to luma conversion
@@ -46,6 +46,13 @@ int* loadFile(std::string path, std::string algo, int& width, int& height)
 				buf[i] = (int)bbuf[i];
 
 			free(bbuf);
+		} else if(path == "::test") {
+			width = 5 * ppi;
+			height = 5 * ppi;
+
+			buf = (int*)calloc(width * height, sizeof(int));
+			Img img = { buf, width, height };
+
 		}
 	} catch(...) {
 		if(buf)
