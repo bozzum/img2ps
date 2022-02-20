@@ -1,7 +1,8 @@
 
 #pragma once
 
-#include "main.h"
 #include <string>
+#include "main.h"
+#include "img.h"
 
-int chromaConv(uint8_t* pSrc, Img& dst, std::string& algo);
+int chromaConv(uint8_t* pSrc, Img<int>& dst, std::string& algo);

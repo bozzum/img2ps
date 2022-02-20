@@ -2,7 +2,8 @@
 #pragma once
 
 #include <string>
+#include "img.h"
 #include "main.h"
 
-int dither(Img& img, int th, const std::string& algo);
+int dither(Img<int>& img, int th, const std::string& algo);
 

@@ -12,17 +12,6 @@
 #define COMPANY			"BozzumDesign (c) (" AUTHOR ")"
 
 typedef struct {
-	int*	data;
-	int		w;
-	int		h;
-} Img;
-
-typedef struct {
-	int		x;
-	int		y;
-} Pt;
-
-typedef struct {
 	int		num;
 	int		den;
 } Coeff;

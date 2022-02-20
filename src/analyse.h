@@ -4,6 +4,7 @@
 #include <array>
 #include <climits>
 #include "main.h"
+#include "img.h"
 
 typedef struct {
 	std::array<int, 256>	lCnt	= {};
@@ -17,4 +18,4 @@ typedef struct {
 	int						maxCnt	= {0};
 } Stat;
 
-int analyse(const Img& img, Stat& stat);
+int analyse(const Img<int>& img, Stat& stat);

@@ -2,7 +2,7 @@
 #include "dither.h"
 
 static void
-adjustPx(Img& img, const Pt& pt, const Coeff& c, int err)
+adjustPx(Img<int>& img, const Pt& pt, const Coeff& c, int err)
 {
 	if(pt.x < 0 or pt.x >= img.w or pt.y < 0 or pt.y >= img.h)
 		return;
@@ -10,7 +10,7 @@ adjustPx(Img& img, const Pt& pt, const Coeff& c, int err)
 }
 
 static void
-calcPx(Img& img, const Pt& pt, Coeff m[3][5], int th)
+calcPx(Img<int>& img, const Pt& pt, Coeff m[3][5], int th)
 {
 	// calculate new pixel
 	int i = (pt.y * img.w) + pt.x;
@@ -28,7 +28,7 @@ calcPx(Img& img, const Pt& pt, Coeff m[3][5], int th)
 }
 
 int
-dither(Img& img, int th, const std::string& algo)
+dither(Img<int>& img, int th, const std::string& algo)
 {
 	Coeff mTH[3][5] = { { {0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 1} },
 						{ {0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 1} },

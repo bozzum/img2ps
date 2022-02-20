@@ -2,7 +2,7 @@
 #include "lumaproc.h"
 
 int
-stretch(Img& img, const Stat& stat)
+stretch(Img<int>& img, const Stat& stat)
 {
 	auto area = img.w * img.h;
 	auto off = -stat.minLuma;

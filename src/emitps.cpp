@@ -6,7 +6,7 @@
 #include "emitps.h"
 
 int
-emitPs(FILE* out, Img img, int pxPerIn, int border)
+emitPs(FILE* out, Img<int> img, int pxPerIn, int border)
 {
 	// pack image into a bit-buffer; lines are 8-bit aligned
 	auto w8 = (img.w + 7) /8;

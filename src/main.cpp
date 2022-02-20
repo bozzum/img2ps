@@ -6,6 +6,7 @@
 #include "emitstats.h"
 #include "dither.h"
 #include "emitps.h"
+#include "img.h"
 #include "main.h"
 
 static void
@@ -14,18 +15,18 @@ printUsage()
 	fprintf(stderr,
 		"Usage: " APPNAME " [options] <img-file>\n"
 		"\nImg-File:"
-		"\n *.png\tPNG image"
+		"\n *.png\t\tPNG image"
 		"\n *.jpg/jpeg\tJPEG image"
-		"\n ::test\tinternale test pattern"
+		"\n ::test\t\tinternale test pattern"
 		"\nOptions:"
-		"\n -b num\tBorder width [default: 0]"
+		"\n -b num\t\tBorder width [default: 0]"
 		"\n -c algo\tChroma algorithm: I [default: I]"
 		"\n -d algo\tDither algorithm: TH, FS, JJN, SI [default: JJN]"
 		"\n -l algo\tLuma algorithm: N, S, T [default: ST]"
 		"\n -o file\tOutput file name [default: stdout]"
-		"\n -p num\tPixel Per Inch [default: 96]"
+		"\n -p num\t\tPixel Per Inch [default: 96]"
 		"\n -s file\tStats file name [default: null]"
-		"\n -?\tDisplay this help message"
+		"\n -?\t\tDisplay this help message"
 	);
 }
 
@@ -74,7 +75,7 @@ main(int argc, char** argv)
 		return 3;
 	}
 
-	Img img = { buf, width, height };
+	Img<int> img = Img<int>(buf, width, height);
 
 	// .........................................................................
 
@@ -111,6 +112,11 @@ main(int argc, char** argv)
 	// .........................................................................
 
 	emitPs(out, img, ppi, border);
+
+	if(out)
+		fclose(out);
+	if(ana)
+		fclose(ana);
 
 	free(buf);
 
