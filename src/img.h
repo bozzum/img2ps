@@ -40,11 +40,14 @@ public:
 				set(fillVal);
 				alloc = true;
 			}
+			Img(const Img&) = delete;
 
 		   ~Img() {
 				if(data and alloc)
 					delete[] data;
 			}
+
+	Img&	operator=(const Img&) = delete;
 
 	void	set(PxVal fillVal = ColWhite) {
 				if(data)

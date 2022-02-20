@@ -8,6 +8,9 @@
 int
 emitPs(FILE* out, Img<int> img, int pxPerIn, int border)
 {
+	if(not out)
+		return -1;
+
 	// pack image into a bit-buffer; lines are 8-bit aligned
 	auto w8 = (img.w + 7) /8;
 	auto bitbuf = new uint8_t[w8 * img.h];
