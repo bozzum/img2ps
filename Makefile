@@ -16,7 +16,7 @@ INC_PATH	?= inc
 RES_PATH	?= $(SRC_PATH)/res
 TRG_PATH	?= bin
 
-TMP			= tmp
+TMP			?= tmp
 TMP_PATH	= $(TMP)
 OBJS_PATH	= $(TMP_PATH)
 RESS_PATH	= $(TMP_PATH)
@@ -47,7 +47,7 @@ RESC_OPT	+= -O coff --preprocessor=$(CPP) -I $(INC_PATH) -I $(SRC_PATH) -I $(RES
 ifdef DEBUG
 CC_OPT		+= -g -g3 -DDEBUG
 else
-CC_OPT		+= -s -Ofast
+CC_OPT		+= -s -Ofast -static
 endif
 
 CC_OPT		+= -mconsole
