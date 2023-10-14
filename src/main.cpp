@@ -17,17 +17,46 @@ printUsage()
 		"\nImg-File:"
 		"\n *.png\t\tPNG image"
 		"\n *.jpg/jpeg\tJPEG image"
-		"\n ::test\t\tinternale test pattern"
+		"\n ::test\t\tinternal test pattern"
 		"\nOptions:"
 		"\n -b num\t\tBorder width [default: 0]"
-		"\n -c algo\tChroma algorithm: I [default: I]"
+		"\n -c algo\tChroma algorithm flags: C, B, S [default: C]"
 		"\n -d algo\tDither algorithm: TH, FS, JJN, SI [default: JJN]"
-		"\n -l algo\tLuma algorithm: N, S, T [default: ST]"
+		"\n -l algo\tLuma algorithm flags: N, S, T [default: ST]"
 		"\n -o file\tOutput file name [default: stdout]"
 		"\n -p num\t\tPixel Per Inch [default: 96]"
 		"\n -s file\tStats file name [default: null]"
 		"\n -?\t\tDisplay this help message"
 	);
+
+	fprintf(stderr, "\n\n"
+		"Dither Algorithms:\n"
+		"TH -- Threshold. This is the most simplest way of dithering, as it only\n"
+		"has a single threshold for deciding between black and white. This algo-\n"
+		"rithm has limited use, mainly for dithering text or drawings\n"
+		"FS -- Floyd-Steinberg. It was first published in 1976 by Robert W. \n"
+		"Floyd and Louis Steinberg. It is an Error-diffusion dithering that \n"
+		"diffuses the quantization error to neighboring pixels\n"
+		"JJN -- Jarvis, Judice & Ninke. This algorithm tends to produce coarser\n"
+		"patterns than the Floyd-Steinberg Dithering method, but with fewer\n"
+		"artifacts\n"
+		"SI -- Sierra. Similar to Jarvis algorithm\n"
+		"\n"
+		"Luma Algorithm Flags:\n"
+		"N -- No Luma Threshold or Image Optimisation. This flag cannot be com-\n"
+		"bined with any other luma flags.\n"
+		"S -- Stretches the luma range of the image. This is useful for images\n"
+		"with low contrast. This algorithm does not change the B/W threshold\n"
+		"T -- Change the B/W threshold to the average luma value. This can be\n"
+		"particularly effective if combines with the 'S' (stretch) algorithm\n"
+		"\n"
+		"Chroma to Luma Conversion Algorithm:\n"
+		"C -- CCIR 601 (R: 0.299, G: 0.587, B: 0.114)\n"
+		"B -- BT709 (R: 0.2126, G: 0.7152, B: 0.0722)\n"
+		"S -- SMPTE 240M (R: 0.212, G: 0.701, B: 0.087)\n"
+		"\n"
+	);
+
 }
 
 int
@@ -36,7 +65,7 @@ main(int argc, char** argv)
 	FILE* out = stdout;
 	FILE* ana = nullptr;
 	std::string lumaAlgo("ST");
-	std::string chromaAlgo("I");
+	std::string chromaAlgo("C");
 	std::string ditherAlgo("JJN");
 	int ppi = 96;
 	int th = 128;

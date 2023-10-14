@@ -33,7 +33,7 @@ emitPs(FILE* out, Img<int> img, int pxPerIn, int border)
 	double l = 0.0;
 	double t = -24.0;
 	auto tm = time(nullptr);
-	char* now = asctime(localtime(&tm));
+	const char* now = asctime(localtime(&tm));
 
 	fprintf(out, "%%!PS-Adobe-3.0\n");
 	fprintf(out, "%%%%BoundingBox: %.4f %.4f %.4f %.4f\n", l, t, w, h);
@@ -55,7 +55,7 @@ emitPs(FILE* out, Img<int> img, int pxPerIn, int border)
 	fprintf(out, "{currentfile bitstr readhexstring pop}\n");
 	fprintf(out, "image\n");
 
-	uint8_t* buf = bitbuf;
+	const uint8_t* buf = bitbuf;
 	for(int y = img.h; y; --y) {
 		int c = w8;
 		while(c) {

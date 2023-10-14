@@ -7,7 +7,7 @@ emitstats(FILE* out, Stat stat)
 	fprintf(out, ".G1\n");
 	fprintf(out, "frame invis left solid bot solid\n");
 	fprintf(out, "label left \"Samples\"\n");
-	fprintf(out, "label bot \"Colour Value\"\n");
+	fprintf(out, "label bot \"Luma Value\"\n");
 	fprintf(out, "draw solid\n");
 	for(int i = 0; i < 256; i ++)
 		fprintf(out, "%i\n", stat.lCnt[i]);

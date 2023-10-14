@@ -43,15 +43,15 @@ dither(Img<int>& img, int th, const std::string& algo)
 						{ {2, 32}, {4, 32}, {5, 32}, {4, 32}, {2, 32} },
 						{ {0, 32}, {2, 32}, {3, 32}, {2, 32}, {0, 32} } };
 
-	Coeff m[3][5];
+	Coeff m[3][5] {};
 	if(algo == "TH")		// Threshold
-		std::copy(&mTH[0][0], &mTH[3][5], &m[0][0]);
+		std::copy(&mTH[0][0], &mTH[2][4], &m[0][0]);
 	else if(algo == "FS")	// Floyd-Steinberg
-		std::copy(&mFS[0][0], &mFS[3][5], &m[0][0]);
+		std::copy(&mFS[0][0], &mFS[2][4], &m[0][0]);
 	else if(algo == "JJN")	// Jarvis, Judice & Ninke
-		std::copy(&mJJN[0][0], &mJJN[3][5], &m[0][0]);
+		std::copy(&mJJN[0][0], &mJJN[2][4], &m[0][0]);
 	else if(algo == "SI")	// Sierra
-		std::copy(&mSI[0][0], &mSI[3][5], &m[0][0]);
+		std::copy(&mSI[0][0], &mSI[2][4], &m[0][0]);
 	else
 		return -1;
 

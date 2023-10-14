@@ -47,11 +47,10 @@ RESC_OPT	+= -O coff --preprocessor=$(CPP) -I $(INC_PATH) -I $(SRC_PATH) -I $(RES
 ifdef DEBUG
 CC_OPT		+= -g -g3 -DDEBUG
 else
-CC_OPT		+= -s -O3
+CC_OPT		+= -s -Ofast
 endif
 
 CC_OPT		+= -mconsole
-#CC_OPT		+= -mwindows
 
 AWK_BUILD	= "{if($$2 ~ /BUILD_NUM/) {$$3 = $$3 + 1};print $$0;}"
 
@@ -62,7 +61,7 @@ AWK_BUILD	= "{if($$2 ~ /BUILD_NUM/) {$$3 = $$3 + 1};print $$0;}"
 
 all: $(TMP_PATH) $(TRG_PATH) $(TRG_PATH)/$(TARGET)
 
-release: all
+release: clean all
 	-$(PK) $(TRG_PATH)/$(TARGET)
 
 clean:
@@ -93,7 +92,7 @@ $(TMP_PATH)/%.o: $(SRC_PATH)/%.c $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
 
 $(TMP_PATH)/%.o: $(SRC_PATH)/%.cpp $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
 	@echo c++ $<
-	@$(CXX) $(CC_OPT) -std=c++17 -c -o $@ $<
+	@$(CXX) $(CC_OPT) -std=c++20 -c -o $@ $<
 
 $(TMP_PATH)/%.ro: $(RES_PATH)/%.rc $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
 	@echo rc $<

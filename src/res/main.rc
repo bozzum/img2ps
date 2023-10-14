@@ -1,4 +1,6 @@
 
+#define RC_INVOKED
+
 #include <windows.h>
 #include "main.h"
 #include "res/build.num"

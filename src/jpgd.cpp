@@ -586,7 +586,7 @@ namespace DCT_Upsample
     typedef int Element_Type;
     enum { NUM_ROWS = 4, NUM_COLS = 4 };
 
-    Element_Type v[NUM_ROWS][NUM_COLS];
+    Element_Type v[NUM_ROWS][NUM_COLS] {};
 
     inline int rows() const { return NUM_ROWS; }
     inline int cols() const { return NUM_COLS; }
@@ -622,7 +622,7 @@ namespace DCT_Upsample
 
     friend inline Matrix44 operator + (const Matrix44& a, const Matrix44& b)
     {
-      Matrix44 ret;
+      Matrix44 ret {};
       for (int r = 0; r < NUM_ROWS; r++)
       {
         ret.at(r, 0) = a.at(r, 0) + b.at(r, 0);
@@ -635,7 +635,7 @@ namespace DCT_Upsample
 
     friend inline Matrix44 operator - (const Matrix44& a, const Matrix44& b)
     {
-      Matrix44 ret;
+      Matrix44 ret {};
       for (int r = 0; r < NUM_ROWS; r++)
       {
         ret.at(r, 0) = a.at(r, 0) - b.at(r, 0);
@@ -1535,7 +1535,7 @@ void jpeg_decoder::transform_mcu_expand(int mcu_row)
 
   for (int i = 0; i < 2; i++)
   {
-    DCT_Upsample::Matrix44 P, Q, R, S;
+    DCT_Upsample::Matrix44 P {}, Q {}, R {}, S {};
 
     JPGD_ASSERT(m_mcu_block_max_zag[mcu_block] >= 1);
     JPGD_ASSERT(m_mcu_block_max_zag[mcu_block] <= 64);
