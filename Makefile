@@ -16,7 +16,7 @@ INC_PATH	?= inc
 RES_PATH	?= $(SRC_PATH)/res
 TRG_PATH	?= bin
 
-TMP			?= tmp
+TMP			= tmp
 TMP_PATH	= $(TMP)
 OBJS_PATH	= $(TMP_PATH)
 RESS_PATH	= $(TMP_PATH)
