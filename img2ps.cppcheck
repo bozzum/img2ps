@@ -13,6 +13,8 @@
     <suppressions>
         <suppression>missingIncludeSystem</suppression>
         <suppression>unusedFunction</suppression>
+        <suppression>safeIntegerOverflow</suppression>
+        <suppression>asctimeCalled</suppression>
     </suppressions>
     <safe-checks>
         <class-public/>

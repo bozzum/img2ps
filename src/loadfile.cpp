@@ -14,7 +14,7 @@ int* loadFile(const std::string& path, std::string& algo, int& width, int& heigh
 			width = 5 * ppi;
 			height = 5 * ppi;
 
-			buf = static_cast<int*>(calloc(width * height, sizeof(int)));
+			buf = new int[width * height];
 			Img<int> img = Img<int>(buf, width, height);
 
 			img.set();
@@ -56,7 +56,7 @@ int* loadFile(const std::string& path, std::string& algo, int& width, int& heigh
 			width = w;
 			height = h;
 
-			buf = static_cast<int*>(calloc(width * height, sizeof(int)));
+			buf = new int[width * height];
 			Img<int> img = Img<int>(buf, width, height);
 
 			// Chroma to luma conversion
@@ -72,7 +72,7 @@ int* loadFile(const std::string& path, std::string& algo, int& width, int& heigh
 			width = w;
 			height = h;
 
-			buf = static_cast<int*>(malloc(width * height * sizeof(int)));
+			buf = new int[width * height];
 			for(int i = 0; i < w * h; i++)
 				buf[i] = (int)(unsigned)bbuf[i];
 			free(bbuf);
@@ -80,7 +80,7 @@ int* loadFile(const std::string& path, std::string& algo, int& width, int& heigh
 	} catch(std::exception& e) {
 		fprintf(stderr, "Error whilst loading the file: %s\n", e.what());
 		if(buf)
-			free(buf);
+			delete[] buf;
 		return nullptr;
 	}
 

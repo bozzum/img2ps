@@ -1,7 +1,7 @@
 
 #include "dither.h"
 
-static void
+static inline void
 adjustPx(Img<int>& img, const Pt& pt, const Coeff& c, int err)
 {
 	if(pt.x < 0 or pt.x >= img.w or pt.y < 0 or pt.y >= img.h)
@@ -9,7 +9,7 @@ adjustPx(Img<int>& img, const Pt& pt, const Coeff& c, int err)
 	img.data[(pt.y * img.w) + pt.x] += (err * c.num) / c.den;
 }
 
-static void
+static inline void
 calcPx(Img<int>& img, const Pt& pt, Coeff m[3][5], int th)
 {
 	// calculate new pixel

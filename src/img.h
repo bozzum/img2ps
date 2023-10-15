@@ -26,25 +26,26 @@ public:
 template<typename T>
 class Img {
 public:
-	T*		data	{nullptr};
-	int		w		{0};
-	int		h		{0};
+	T*			data	{nullptr};
+	int			w		{0};
+	int			h		{0};
 
-			Img() { return; }
-			Img(T* ptrBuf, int width, int height) : data(ptrBuf), w(width), h(height) {
-				area = w * h;
-			}
-			Img(int width, int height, PxVal fillVal = ColWhite) : w(width), h(height) {
-				area = w * h;
-				data = new T[area];
-				set(fillVal);
-				alloc = true;
-			}
+				Img() { return; }
+	explicit	Img(T* ptrBuf, int width, int height) : data(ptrBuf), w(width), h(height) {
+					area = w * h;
+				}
+	explicit	Img(int width, int height, PxVal fillVal = ColWhite) : w(width), h(height) {
+					area = w * h;
+					data = new T[area];
+					set(fillVal);
+					alloc = true;
+				}
+				Img(const Img&) = delete;
 
-		   ~Img() {
-				if(data and alloc)
-					delete[] data;
-			}
+			   ~Img() {
+					if(data and alloc)
+						delete[] data;
+				}
 
 	Img&	operator=(const Img&) = delete;
 
