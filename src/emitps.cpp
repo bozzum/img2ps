@@ -11,6 +11,8 @@ emitPs(FILE* out, Img<int>& img, int pxPerIn, int border)
 	if(not out)
 		return -1;
 
+	img.h &= ~1;
+
 	// pack image into a bit-buffer; lines are 8-bit aligned
 	auto w8 = (img.w + 7) /8;
 	auto bitbuf = new uint8_t[w8 * img.h];
@@ -49,8 +51,8 @@ emitPs(FILE* out, Img<int>& img, int pxPerIn, int border)
 	fprintf(out, "%%EndProlog\n");
 
 	// Image
-	if(border)
-		h--;	//FIXME: Without this, the borders won't work. WHy?
+//	if(border)
+//		h--;	//FIXME: Without this, the borders won't work. WHy?
 	fprintf(out, "gsave\n");
 	fprintf(out, "%.4f %.4f translate\n", l, h);
 	fprintf(out, "%.4f %.4f scale\n", w, -h);

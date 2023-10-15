@@ -2,7 +2,7 @@
 #include "emitstats.h"
 
 int
-emitstats(FILE* out, Stat& stat)
+emitstats(FILE* out, const Stat& stat)
 {
 	fprintf(out, ".G1\n");
 	fprintf(out, "frame invis left solid bot solid\n");

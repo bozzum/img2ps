@@ -7,6 +7,9 @@
     <check-unused-templates>false</check-unused-templates>
     <max-ctu-depth>2</max-ctu-depth>
     <max-template-recursion>100</max-template-recursion>
+    <paths>
+        <dir name="src"/>
+    </paths>
     <libraries>
         <library>windows</library>
     </libraries>
@@ -15,6 +18,7 @@
         <suppression>unusedFunction</suppression>
         <suppression>safeIntegerOverflow</suppression>
         <suppression>asctimeCalled</suppression>
+        <suppression>cstyleCast</suppression>
     </suppressions>
     <safe-checks>
         <class-public/>
