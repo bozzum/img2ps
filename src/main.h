@@ -1,5 +1,5 @@
 // This file is part of img2ps.
-// Copyright (c) 2022-2023, Patric Keller
+// Copyright (c) 2022-2023, Patric Keller (bozzumdesign at gmail dot com)
 // The code is made available under the MIT License, see LICENSE document
 
 #pragma once
@@ -15,7 +15,7 @@
 #define CPYR_YEAR		"2022-2023"
 #define AUTHOR			"Patric Keller"
 #define COMPANY			"BozzumDesign (" AUTHOR ")"
-#define LICENSE			PROD_NAME " is made availabe under the MIT License"
+#define LICENSE			PROD_NAME " is made available under the MIT License"
 
 typedef struct {
 	int		num;

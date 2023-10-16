@@ -1,5 +1,5 @@
 // This file is part of img2ps.
-// Copyright (c) 2022-2023, Patric Keller
+// Copyright (c) 2022-2023, Patric Keller (bozzumdesign at gmail dot com)
 // The code is made available under the MIT License, see LICENSE document
 
 #include <ctime>
@@ -47,15 +47,14 @@ emitPs(FILE* out, Img<int>& img, int pxPerIn, int border)
 	fprintf(out, "%%%%CreationDate: %s", now);
 	fprintf(out, "%%%%DocumentData: Clean7Bit\n");
 	fprintf(out, "%%%%LanguageLevel: 2\n");
-	fprintf(out, "%%%%Pages: 0\n");
+	fprintf(out, "%%%%Pages: 1\n");
 	fprintf(out, "%%%%EndComments\n");
+
 	fprintf(out, "%%%%BeginProlog\n");
 	fprintf(out, "1 dict begin\n");
 	fprintf(out, "%%EndProlog\n");
 
 	// Image
-//	if(border)
-//		h--;	//FIXME: Without this, the borders won't work. WHy?
 	fprintf(out, "gsave\n");
 	fprintf(out, "%.4f %.4f translate\n", l, h);
 	fprintf(out, "%.4f %.4f scale\n", w, -h);
@@ -83,7 +82,7 @@ emitPs(FILE* out, Img<int>& img, int pxPerIn, int border)
 	if(border) {
 		int x0 = 0, y0 = 0, x1 = img.w, y1 = img.h;
 		fprintf(out, "gsave\n0 0 translate\n1 1 scale\n");
-		fprintf(out, "%f setlinewidth\n", 72.0 / pxPerIn);
+		fprintf(out, "%f setlinewidth\n", 1.0);//72.0 / pxPerIn);
 		fprintf(out, "0 0 0 setrgbcolor\n");
 		// somehow the ps2pdf renderer doesn't recognise line widths > 1, so if
 		// we want a thicker border, we need to improvise.
