@@ -59,7 +59,7 @@ endif
 all: $(trgPath)/$(target)
 
 release: clean all
-	-$(PK) $(trgPath)/$(target)
+	-$(PK) $(trgPath)/$(target).exe
 
 clean:
 	-$(RM) $(objsPath)/*.o
