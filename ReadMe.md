@@ -5,10 +5,11 @@ img2ps is a
 
 ## Usage
 img2ps is a command-line tool. It takes a single image file (either in PNG or Jpeg
-format) dithers the image and stores it as a PostScript (PS) file. In addition,
-it can also produce a histogram of the luminance distribution in form of a GRAP
-file - these files can be processed with the troff/groff tool grap and then
-processed with the pic preprocessor.
+format), dithers the image, and emits it as a PostScript (PS) document, either to
+stdout or to a file.
+In addition, it can also produce a histogram of the luminance distribution in
+form of a GRAP file - these files can be processed with the troff/groff tool
+grap and then processed with the pic preprocessor.
 
 The syntax is `img2ps [options] <img-file|::test>`.
 For a full list of options use `img2ps -?`
@@ -54,5 +55,5 @@ The build process requires:
 * GRAP files: https://manpages.ubuntu.com/manpages/impish/en/man1/grap.1.html
 
 ## License
-img2ps is distributed under the [MIT License]{LICENSE).
+img2ps is made available under the [MIT License](LICENSE).
 Copyright (c) 2023 Patric Keller

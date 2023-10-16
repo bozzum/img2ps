@@ -1,3 +1,7 @@
+// This file is part of img2ps.
+// Copyright (c) 2022-2023, Patric Keller
+// The code is made available under the MIT License, see LICENSE document
+
 #pragma once
 
 #include <cstdint>
@@ -204,4 +208,3 @@ private:
 	int		area	{0};
 	bool	alloc	{false};
 };
-

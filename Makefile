@@ -1,3 +1,7 @@
+# This file is part of img2ps.
+# Copyright (c) 2022-2023, Patric Keller
+# The code is made available under the MIT License, see LICENSE document
+
 target		= img2ps
 objs		= main.o lodepng.o jpgd.o loadfile.o chromaproc.o \
 			  analyse.o lumaproc.o emitstats.o dither.o emitps.o
@@ -46,8 +50,6 @@ endif
 ifeq ($(OS),Windows_NT)
 objsRes		+= $(ressRes)
 endif
-
-AWK_BUILD	= "{if($$2 ~ /BUILD_NUM/) {$$3 = $$3 + 1};print $$0;}"
 
 # targets
 # ------------------------------------------------------------------------------
