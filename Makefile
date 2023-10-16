@@ -1,23 +1,18 @@
-TARGET		= img2ps.exe
+TARGET		= img2ps
 OBJS		= main.o lodepng.o jpgd.o loadfile.o chromaproc.o \
 			  analyse.o lumaproc.o emitstats.o dither.o emitps.o
 RESS		= main.ro
-LIBS		=
+
 CC_OPT		= -DLODEPNG_NO_COMPILE_ENCODER
 
 # paths & names
 # ------------------------------------------------------------------------------
-CC_PATH		?= C:/msys64/mingw64/bin
-TOOL_PATH	?= C:/Tools
-SYS_PATH	?= C:/msys64/usr/bin
-
 SRC_PATH	?= src
 INC_PATH	?= inc
 RES_PATH	?= $(SRC_PATH)/res
 TRG_PATH	?= bin
 
-TMP			= tmp
-TMP_PATH	= $(TMP)
+TMP_PATH	= tmp
 OBJS_PATH	= $(TMP_PATH)
 RESS_PATH	= $(TMP_PATH)
 
@@ -26,18 +21,15 @@ RESS_RS		= $(addprefix $(RESS_PATH)/,$(RESS))
 
 # tools
 # ------------------------------------------------------------------------------
-CPP	= $(CC_PATH)/cpp
-CC	= $(CC_PATH)/gcc
-CXX	= $(CC_PATH)/g++
-RC	= $(CC_PATH)/windres
-AR	= $(CC_PATH)/ar
-LD	= $(CC_PATH)/g++
-AWK	= $(TOOL_PATH)/awk
-PK	= $(TOOL_PATH)/upx --best --no-color
-CP	= $(SYS_PATH)/cp -f
-RM	= $(SYS_PATH)/rm -f
-MD	= $(SYS_PATH)/mkdir -p
-RD	= $(SYS_PATH)/rmdir -p
+CPP	= cpp
+CXX	= g++
+RC	= windres
+LD	= g++
+AWK	= awk
+PK	= upx --best --no-color
+CP	= cp -f
+RM	= rm -f
+MD	= mkdir -p
 
 # configuration
 # ------------------------------------------------------------------------------
@@ -47,10 +39,12 @@ RESC_OPT	+= -O coff --preprocessor=$(CPP) -I $(INC_PATH) -I $(SRC_PATH) -I $(RES
 ifdef DEBUG
 CC_OPT		+= -g -g3 -DDEBUG
 else
-CC_OPT		+= -s -Ofast -static
+CC_OPT		+= -s -O3 -static
 endif
 
-CC_OPT		+= -mconsole
+ifeq ($(OS),Windows_NT)
+OBJS_RS		+= $(RESS_RS)
+endif
 
 AWK_BUILD	= "{if($$2 ~ /BUILD_NUM/) {$$3 = $$3 + 1};print $$0;}"
 
@@ -59,7 +53,7 @@ AWK_BUILD	= "{if($$2 ~ /BUILD_NUM/) {$$3 = $$3 + 1};print $$0;}"
 .SUFFIXES:
 .PHONY: all release clean
 
-all: $(TMP_PATH) $(TRG_PATH) $(TRG_PATH)/$(TARGET)
+all: $(TRG_PATH)/$(TARGET)
 
 release: clean all
 	-$(PK) $(TRG_PATH)/$(TARGET)
@@ -76,34 +70,18 @@ clean:
 
 # list based targets
 # ------------------------------------------------------------------------------
-%.exe: $(OBJS_RS) $(RESS_RS) $(LIBS)
+$(TRG_PATH)/$(TARGET): $(OBJS_RS) ; @-$(MD) $(dir $@)
 	@$(AWK) -f $(RES_PATH)/build.awk $(RES_PATH)/build.num > $(TMP_PATH)/build.num
 	@$(CP) -f $(TMP_PATH)/build.num $(RES_PATH)/build.num
 	@echo ld $@
 	@$(LD) $(CC_OPT) -o $@ $^
 
-$(LIBS): ;
-
 # single object targets
 # ------------------------------------------------------------------------------
-$(TMP_PATH)/%.o: $(SRC_PATH)/%.c $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
-	@echo cc $<
-	@$(CC) $(CC_OPT) -std=c99 -c -o $@ $<
-
 $(TMP_PATH)/%.o: $(SRC_PATH)/%.cpp $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
 	@echo c++ $<
-	@$(CXX) $(CC_OPT) -std=c++20 -c -o $@ $<
+	@$(CXX) $(CC_OPT) -std=c++17 -c -o $@ $<
 
 $(TMP_PATH)/%.ro: $(RES_PATH)/%.rc $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
 	@echo rc $<
 	@$(RC) $(RESC_OPT) $< $@
-
-# structure targets
-# ------------------------------------------------------------------------------
-$(TMP_PATH):
-	@echo md $(dir $@)
-	@-$(MD) $(dir $@)
-
-$(TRG_PATH):
-	@echo md $(dir $@)
-	@-$(MD) $(dir $@)

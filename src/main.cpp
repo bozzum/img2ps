@@ -26,7 +26,8 @@ printUsage()
 		"\n -o file\tOutput file name [default: stdout]"
 		"\n -p num\t\tPixel Per Inch [default: 96]"
 		"\n -s file\tStats file name [default: null]"
-		"\n -t overwrite luma threshold level: 0..255 [default: -1], mainly for -d TH"
+		"\n -t num\t\tOverwrite luma threshold level: 0..255 [default: -1], mainly for '-d TH'"
+		"\n -v\t\tDisplay version info"
 		"\n -?\t\tDisplay this help message"
 	);
 
@@ -68,6 +69,15 @@ printUsage()
 	);
 }
 
+static void
+printVersion()
+{
+	printf("\n" APPNAME " - " PROD_DESCR "\n");
+	printf("Version: %u.%u.%u - BuildNo: %u\n", MAJOR_VER, MINOR_VER, PATCH_VER, BUILD_NUM);
+	printf("Copyright (c) " CPYR_YEAR ", " COMPANY "\n");
+	printf(LICENSE "\n\n");
+}
+
 int
 main(int argc, char** argv)
 {
@@ -81,7 +91,7 @@ main(int argc, char** argv)
 	int border = 0;
 	int overTh = -1;
 
-	for(int o; (o = getopt(argc, argv, "?b:c:d:l:o:p:s:t:")) != -1; )
+	for(int o; (o = getopt(argc, argv, "?b:c:d:l:o:p:s:t:v")) != -1; )
 		switch(o) {
 			case '?': printUsage(); return 0;
 			case 'b': border = (int)strtoul(optarg, nullptr, 0); break;
@@ -92,6 +102,7 @@ main(int argc, char** argv)
 			case 'p': ppi = (int)strtoul(optarg, nullptr, 0); break;
 			case 's': ana = fopen(optarg, "wb"); break;
 			case 't': overTh = (int)strtoul(optarg, nullptr, 0); break;
+			case 'v': printVersion(); return 0;
 		}
 
 	if(optind == argc) {

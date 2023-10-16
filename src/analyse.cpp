@@ -1,5 +1,6 @@
 
 #include <cstdio>
+#include <stdexcept>
 #include "analyse.h"
 
 int
