@@ -43,6 +43,12 @@ https://lodev.org/lodepng/ https://github.com/lvandeve/lodepng (zlib License)
 * JPEG decoder: jpgd (Release March 25, 2020 ) by Richard Geldreich.
 https://github.com/richgel999/jpeg-compressor/tree/master ("Public Domain" license)
 
+The build process requires:
+* GNU gcc compiler suite (version 11 or above, C++17 support required)
+* System tools like rm, mkdir, cp, awk...
+* (optional): upx - file compressor (https://upx.github.io/)
+* (optional) cppcheck -  static code analyser (http://cppcheck.net/)
+
 ## Reference
 * Dithering: https://tannerhelland.com/2012/12/28/dithering-eleven-algorithms-source-code.html
 * GRAP files: https://manpages.ubuntu.com/manpages/impish/en/man1/grap.1.html

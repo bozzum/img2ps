@@ -1,23 +1,23 @@
-TARGET		= img2ps
-OBJS		= main.o lodepng.o jpgd.o loadfile.o chromaproc.o \
+target		= img2ps
+objs		= main.o lodepng.o jpgd.o loadfile.o chromaproc.o \
 			  analyse.o lumaproc.o emitstats.o dither.o emitps.o
-RESS		= main.ro
+ress		= main.ro
 
-CC_OPT		= -DLODEPNG_NO_COMPILE_ENCODER
+ccOpt		= -DLODEPNG_NO_COMPILE_ENCODER
 
 # paths & names
 # ------------------------------------------------------------------------------
-SRC_PATH	?= src
-INC_PATH	?= inc
-RES_PATH	?= $(SRC_PATH)/res
-TRG_PATH	?= bin
+srcPath		?= src
+incPath		?= inc
+resPath		?= $(srcPath)/res
+trgPath		?= bin
 
-TMP_PATH	= tmp
-OBJS_PATH	= $(TMP_PATH)
-RESS_PATH	= $(TMP_PATH)
+tmpPath		= tmp
+objsPath	= $(tmpPath)
+ressPath	= $(tmpPath)
 
-OBJS_RS		= $(addprefix $(OBJS_PATH)/,$(OBJS))
-RESS_RS		= $(addprefix $(RESS_PATH)/,$(RESS))
+objsRes		= $(addprefix $(objsPath)/,$(objs))
+ressRes		= $(addprefix $(ressPath)/,$(ress))
 
 # tools
 # ------------------------------------------------------------------------------
@@ -27,23 +27,24 @@ RC	= windres
 LD	= g++
 AWK	= awk
 PK	= upx --best --no-color
+CHK	= cppcheck
 CP	= cp -f
 RM	= rm -f
 MD	= mkdir -p
 
 # configuration
 # ------------------------------------------------------------------------------
-CC_OPT		+= -Wall -Wextra -Wpedantic -I $(INC_PATH) -I $(SRC_PATH)
-RESC_OPT	+= -O coff --preprocessor=$(CPP) -I $(INC_PATH) -I $(SRC_PATH) -I $(RES_PATH)
+ccOpt		+= -Wall -Wextra -Wpedantic -I $(incPath) -I $(srcPath)
+RESC_OPT	+= -O coff --preprocessor=$(CPP) -I $(incPath) -I $(srcPath) -I $(resPath)
 
 ifdef DEBUG
-CC_OPT		+= -g -g3 -DDEBUG
+ccOpt		+= -g -g3 -DDEBUG
 else
-CC_OPT		+= -s -O3 -static
+ccOpt		+= -s -O3 -static
 endif
 
 ifeq ($(OS),Windows_NT)
-OBJS_RS		+= $(RESS_RS)
+objsRes		+= $(ressRes)
 endif
 
 AWK_BUILD	= "{if($$2 ~ /BUILD_NUM/) {$$3 = $$3 + 1};print $$0;}"
@@ -51,37 +52,40 @@ AWK_BUILD	= "{if($$2 ~ /BUILD_NUM/) {$$3 = $$3 + 1};print $$0;}"
 # targets
 # ------------------------------------------------------------------------------
 .SUFFIXES:
-.PHONY: all release clean
+.PHONY: all release clean check
 
-all: $(TRG_PATH)/$(TARGET)
+all: $(trgPath)/$(target)
 
 release: clean all
-	-$(PK) $(TRG_PATH)/$(TARGET)
+	-$(PK) $(trgPath)/$(target)
 
 clean:
-	-$(RM) $(OBJS_PATH)/*.o
-	-$(RM) $(RESS_PATH)/*.ro
-	-$(RM) -r $(TMP_PATH)/*
-	-$(RM) $(TRG_PATH)/$(TARGET)
+	-$(RM) $(objsPath)/*.o
+	-$(RM) $(ressPath)/*.ro
+	-$(RM) -r $(tmpPath)/*
+	-$(RM) $(trgPath)/$(target)
+
+check:
+	-$(CHK) --project=$(target).cppcheck --enable=all
 
 # implicit rules
 # ------------------------------------------------------------------------------
-.PRECIOUS: $(TMP_PATH)/%.o $(TMP_PATH)/%.ro
+.PRECIOUS: $(tmpPath)/%.o $(tmpPath)/%.ro
 
 # list based targets
 # ------------------------------------------------------------------------------
-$(TRG_PATH)/$(TARGET): $(OBJS_RS) ; @-$(MD) $(dir $@)
-	@$(AWK) -f $(RES_PATH)/build.awk $(RES_PATH)/build.num > $(TMP_PATH)/build.num
-	@$(CP) -f $(TMP_PATH)/build.num $(RES_PATH)/build.num
+$(trgPath)/$(target): $(objsRes) ; @-$(MD) $(dir $@)
+	@$(AWK) -f $(resPath)/build.awk $(resPath)/build.num > $(tmpPath)/build.num
+	@$(CP) -f $(tmpPath)/build.num $(resPath)/build.num
 	@echo ld $@
-	@$(LD) $(CC_OPT) -o $@ $^
+	@$(LD) $(ccOpt) -o $@ $^
 
 # single object targets
 # ------------------------------------------------------------------------------
-$(TMP_PATH)/%.o: $(SRC_PATH)/%.cpp $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
+$(tmpPath)/%.o: $(srcPath)/%.cpp $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
 	@echo c++ $<
-	@$(CXX) $(CC_OPT) -std=c++17 -c -o $@ $<
+	@$(CXX) $(ccOpt) -std=c++17 -c -o $@ $<
 
-$(TMP_PATH)/%.ro: $(RES_PATH)/%.rc $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
+$(tmpPath)/%.ro: $(resPath)/%.rc $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
 	@echo rc $<
 	@$(RC) $(RESC_OPT) $< $@

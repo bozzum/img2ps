@@ -73,7 +73,7 @@ static void
 printVersion()
 {
 	printf("\n" APPNAME " - " PROD_DESCR "\n");
-	printf("Version: %u.%u.%u - BuildNo: %u\n", MAJOR_VER, MINOR_VER, PATCH_VER, BUILD_NUM);
+	printf("Version: %i.%i.%i - BuildNo: %i\n", MAJOR_VER, MINOR_VER, PATCH_VER, BUILD_NUM);
 	printf("Copyright (c) " CPYR_YEAR ", " COMPANY "\n");
 	printf(LICENSE "\n\n");
 }
