@@ -9,7 +9,7 @@
 #include "emitps.h"
 
 int
-emitPs(FILE* out, Img<int>& img, int pxPerIn, int border)
+emitPs(FILE* out, Img<int>& img, int /*pxPerIn*/, int border)
 {
 	if(not out)
 		return -1;
@@ -25,7 +25,7 @@ emitPs(FILE* out, Img<int>& img, int pxPerIn, int border)
 	for(int y = 0; y < img.h; y++) {
 		for(int x = 0; x < img.w; j++) {
 			if(img.data[j])
-				bitbuf[i] |= 0x80 >> (x & 0x07);
+				bitbuf[i] |= static_cast<uint8_t>(0x80 >> (x & 0x07));
 			if((++x & 0x07) == 0x00)
 				i++;
 		}
@@ -65,7 +65,7 @@ emitPs(FILE* out, Img<int>& img, int pxPerIn, int border)
 	fprintf(out, "image\n");
 
 	const uint8_t* buf = bitbuf;
-	for(int y = h; y; --y) {
+	for(int y = img.h; y; --y) {
 		int c = w8;
 		while(c) {
 			int n = std::min(c, 40);

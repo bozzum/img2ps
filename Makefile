@@ -2,26 +2,25 @@
 # Copyright (c) 2022-2023, Patric Keller
 # The code is made available under the MIT License, see LICENSE document
 
-target		= img2ps
-objs		= main.o lodepng.o jpgd.o loadfile.o chromaproc.o \
-			  analyse.o lumaproc.o emitstats.o dither.o emitps.o
-ress		= main.ro
+# To enable debug mode, do a "make DEBUG=1"
 
-ccOpt		= -DLODEPNG_NO_COMPILE_ENCODER
+prj		= img2ps
+ccOpt	= -DLODEPNG_NO_COMPILE_ENCODER
 
 # paths & names
 # ------------------------------------------------------------------------------
-srcPath		?= src
-incPath		?= inc
-resPath		?= $(srcPath)/res
-trgPath		?= bin
+srcPath	?= src
+incPath	?= inc
+resPath	?= $(srcPath)/res
+trgPath	?= bin
+tmpPath	?= tmp
 
-tmpPath		= tmp
-objsPath	= $(tmpPath)
-ressPath	= $(tmpPath)
-
-objsRes		= $(addprefix $(objsPath)/,$(objs))
-ressRes		= $(addprefix $(ressPath)/,$(ress))
+app		= $(trgPath)/$(prj)
+srcs	= $(wildcard $(srcPath)/*.cpp)
+ress	= $(wildcard $(resPath)/*.rc)
+objs	= $(subst $(srcPath), $(tmpPath), $(srcs:.cpp=.o))
+orcs	= $(subst $(resPath), $(tmpPath), $(ress:.rc=.ro))
+deps	= $(subst $(srcPath), $(tmpPath), $(srcs:.cpp=.d))
 
 # tools
 # ------------------------------------------------------------------------------
@@ -30,7 +29,7 @@ CXX	= g++
 RC	= windres
 LD	= g++
 AWK	= awk
-PK	= upx --best --no-color
+PK	= upx
 CHK	= cppcheck
 CP	= cp -f
 RM	= rm -f
@@ -38,17 +37,20 @@ MD	= mkdir -p
 
 # configuration
 # ------------------------------------------------------------------------------
-ccOpt		+= -Wall -Wextra -Wpedantic -I $(incPath) -I $(srcPath)
+ccOpt		+= -Wall -Wextra -Wpedantic -Wformat=2 -Wnull-dereference \
+			   -Wlogical-op -Winline -Wshadow
+ccOpt		+= -I $(incPath) -I $(srcPath)
 RESC_OPT	+= -O coff --preprocessor=$(CPP) -I $(incPath) -I $(srcPath) -I $(resPath)
 
 ifdef DEBUG
 ccOpt		+= -g -g3 -DDEBUG
 else
-ccOpt		+= -s -O3 -static
+ccOpt		+= -O3 -s -static -DNDEBUG
 endif
 
 ifeq ($(OS),Windows_NT)
-objsRes		+= $(ressRes)
+objs		+= $(orcs)
+app			:= $(addsuffix .exe, $(app))
 endif
 
 # targets
@@ -56,19 +58,32 @@ endif
 .SUFFIXES:
 .PHONY: all release clean check
 
-all: $(trgPath)/$(target)
+all: $(app)
 
 release: clean all
-	-$(PK) $(trgPath)/$(target).exe
+ifneq (, $(shell which $(PK)))
+	@echo [upx] $(app)
+	@$(PK) --best --no-color $(app)
+else
+	@echo "***** No '$(CHK)' installed... *****"
+endif
+	@echo [rm ] $(tmpPath)/
+	@$(RM) -r -d $(tmpPath)/
 
 clean:
-	-$(RM) $(objsPath)/*.o
-	-$(RM) $(ressPath)/*.ro
-	-$(RM) -r $(tmpPath)/*
-	-$(RM) $(trgPath)/$(target)
+	@echo [rm ] $(tmpPath)/
+	@$(RM) -r -d $(tmpPath)/
+
+spotless: clean
+	@$(RM) $(app)
 
 check:
-	-$(CHK) --project=$(target).cppcheck --enable=all
+ifneq (, $(shell which $(CHK)))
+	@echo [chk] $(prj)
+	@$(CHK) --project=$(prj).cppcheck --enable=all
+else
+	@echo "***** No '$(CHK)' installed... *****"
+endif
 
 # implicit rules
 # ------------------------------------------------------------------------------
@@ -76,18 +91,24 @@ check:
 
 # list based targets
 # ------------------------------------------------------------------------------
-$(trgPath)/$(target): $(objsRes) ; @-$(MD) $(dir $@)
+$(app): $(objs) ; @-$(MD) $(dir $@)
 	@$(AWK) -f $(resPath)/build.awk $(resPath)/build.num > $(tmpPath)/build.num
 	@$(CP) -f $(tmpPath)/build.num $(resPath)/build.num
-	@echo ld $@
+	@echo [ld ] $@
 	@$(LD) $(ccOpt) -o $@ $^
 
 # single object targets
 # ------------------------------------------------------------------------------
 $(tmpPath)/%.o: $(srcPath)/%.cpp $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
-	@echo c++ $<
+	@echo [c++] $<
 	@$(CXX) $(ccOpt) -std=c++17 -c -o $@ $<
+	@$(CXX) -I $(incPath) -I $(srcPath) -MM -MG -MP -MT $@ -MF $(tmpPath)/$*.d $<
 
 $(tmpPath)/%.ro: $(resPath)/%.rc $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
-	@echo rc $<
+	@echo [rc ] $<
 	@$(RC) $(RESC_OPT) $< $@
+
+# dependencies
+# ..............................................................................
+
+-include $(deps)

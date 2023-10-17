@@ -55,7 +55,8 @@ other files or modules. No installer included or required.
 
 The `make` file has various targets:
 * `all` (implicit) - builds/rebuilds the application
-* `clean` - tidy up
+* `clean` - tidy up temporary files
+* `spotless` - tidy up all make-generated files
 * `release` - tidy up, rebuild all and run `upx` to pack the executable. Note:
 this doesn't **install** the application -- this has to be done by hand, if desired.
 * `check` -- optional target, which runs `cppcheck` over the source code. This is

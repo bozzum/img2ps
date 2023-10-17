@@ -24,7 +24,7 @@ public:
 	int		x;
 	int		y;
 
-			Pt(int x, int y) : x(x), y(y) { return; }
+			Pt(int xPos, int yPos) : x(xPos), y(yPos) { return; }
 };
 
 template<typename T>
