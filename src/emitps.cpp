@@ -5,14 +5,15 @@
 #include <ctime>
 #include <cstdint>
 #include <cstring>
+#include <string>
 #include <algorithm>
 #include "emitps.h"
 
 int
-emitPs(FILE* out, Img<int>& img, int /*pxPerIn*/, int border)
+emitPs(FILE* out, Img<int>& img)
 {
 	if(not out)
-		return -1;
+		throw std::string("emitPs(nullptr)");
 
 	img.h &= ~1;
 
@@ -36,7 +37,7 @@ emitPs(FILE* out, Img<int>& img, int /*pxPerIn*/, int border)
 	double w = (double)img.w;
 	double h = (double)img.h;
 	double l = 0.0;
-	double t = -24.0;
+	double t = 0.0;//-24.0;
 	auto tm = time(nullptr);
 	const char* now = asctime(localtime(&tm));
 
@@ -77,29 +78,6 @@ emitPs(FILE* out, Img<int>& img, int /*pxPerIn*/, int border)
 	}
 
 	fprintf(out, "grestore\n");
-
-	// Frame
-	if(border) {
-		int x0 = 0, y0 = 0, x1 = img.w, y1 = img.h;
-		fprintf(out, "gsave\n0 0 translate\n1 1 scale\n");
-		fprintf(out, "%f setlinewidth\n", 1.0);//72.0 / pxPerIn);
-		fprintf(out, "0 0 0 setrgbcolor\n");
-		// somehow the ps2pdf renderer doesn't recognise line widths > 1, so if
-		// we want a thicker border, we need to improvise.
-		while(border-- > 0) {
-			fprintf(out, "newpath\n");
-			fprintf(out, "%i %i moveto\n", x0, y0);
-			fprintf(out, "%i %i lineto\n", x0, y1);
-			fprintf(out, "%i %i lineto\n", x1, y1);
-			fprintf(out, "%i %i lineto\n", x1, y0);
-			fprintf(out, "closepath\n");
-			fprintf(out, "stroke\n");
-
-			x0++; y0++; x1--; y1--;
-		}
-		fprintf(out, "grestore\n");
-	}
-
 	fprintf(out, "showpage\n");
 
 	// Epilogue

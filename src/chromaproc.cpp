@@ -17,7 +17,7 @@ chromaConv(uint8_t* pSrc, Img<int>& dst, std::string& algo)
 	} else if(algo == "S") {
 		fR = 0.212; fG = 0.701; fB = 0.087;
 	} else
-		return -1;
+		throw "Unknown Chroma-Conversion " + algo;
 
 	auto area = dst.w * dst.h;
 	for(int n = 0; n < area; n++, pSrc += 4) {

@@ -35,7 +35,7 @@ analyse(const Img<int>& img, Stat& stat)
 		stat.sumCnt = area;
 
 	} catch(std::exception& e) {
-		fprintf(stderr, "Error whilst analyzing the image: %s\n", e.what());
+		throw std::string("Analyzing the image: ") + e.what();
 	}
 
 	return 0;

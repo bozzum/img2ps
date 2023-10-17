@@ -6,6 +6,6 @@
 
 #include "main.h"
 #include "img.h"
-#include <cstdio>
+#include <string>
 
-int emitPs(FILE* out, Img<int>& img);
+int emitPng(const std::string& filename, Img<int>& img);

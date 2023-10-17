@@ -25,6 +25,9 @@ of repetitive patterns.
 colour or b/w image, render it in a nice way, and produce a Postscript[^1] output
 that can be embedded into a `troff/groff` document.
 
+As an additional feature **img2ps** can also store the result as a PNG file: Just
+specify the output file name with a `.png` extension. As easy as that!
+
 [^1]: Technically the output is Encapsulated Postscript (EPS). This is really
 just a technicality.
 
@@ -99,8 +102,6 @@ Here is an example of various dithering: [testDither.pdf](testDither.pdf).
 * Scaling of Source Image -- Putting the scaler into the dithering tool would
 allow us to optimise the scaled picture for dithering, rather than apply a generic
 scaling that pleases the eye.
-* PNG output -- Producing PNG output would open up the dithering tool to other
-typesetting or documentation tools.
 
 ## Acknowledgements
 **img2ps** uses the following 3rd party software:

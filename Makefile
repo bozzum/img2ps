@@ -5,7 +5,6 @@
 # To enable debug mode, do a "make DEBUG=1"
 
 prj		= img2ps
-ccOpt	= -DLODEPNG_NO_COMPILE_ENCODER
 
 # paths & names
 # ------------------------------------------------------------------------------

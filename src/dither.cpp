@@ -56,7 +56,7 @@ dither(Img<int>& img, int th, const std::string& algo)
 	else if(algo == "SI")	// Sierra
 		std::copy(&mSI[0][0], &mSI[2][4], &m[0][0]);
 	else
-		return -1;
+		throw "Unrecognised dither algorithm " + algo;
 
 	for(int y = 0; y < img.h; y++)
 		for(int x = 0; x < img.w; x++) {

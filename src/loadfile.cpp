@@ -54,7 +54,7 @@ int* loadFile(const std::string& path, std::string& algo, int& width, int& heigh
 
 			auto rc = lodepng::decode(image, w, h, path);
 			if(rc)
-				throw std::runtime_error("Failed to load PNG file");
+				throw std::string("Failed to load PNG file: ") + lodepng_error_text(rc);
 
 			width = w;
 			height = h;
@@ -63,14 +63,13 @@ int* loadFile(const std::string& path, std::string& algo, int& width, int& heigh
 			Img<int> img = Img<int>(buf, width, height);
 
 			// Chroma to luma conversion
-			if(chromaConv(image.data(), img, algo))
-				throw std::runtime_error("Failed to perform colour conversion");
+			chromaConv(image.data(), img, algo);
 
 		} else if(ext == ".jpg" or ext == ".jpeg") {
 			int w, h, c;
 			auto bbuf = jpgd::decompress_jpeg_image_from_file(path.c_str(), &w, &h, &c, 1);
 			if(not bbuf)
-				throw std::runtime_error("Failed to load JPEG file");
+				throw std::string("Failed to load JPEG file");
 
 			width = w;
 			height = h;
@@ -80,11 +79,10 @@ int* loadFile(const std::string& path, std::string& algo, int& width, int& heigh
 				buf[i] = (int)(unsigned)bbuf[i];
 			free(bbuf);
 		}
-	} catch(std::exception& e) {
-		fprintf(stderr, "Error whilst loading the file: %s\n", e.what());
+	} catch(...) {
 		if(buf)
 			delete[] buf;
-		return nullptr;
+		throw;
 	}
 
 	return buf;

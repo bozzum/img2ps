@@ -8,7 +8,9 @@
 #include "lumaproc.h"
 #include "emitstats.h"
 #include "dither.h"
+#include "border.h"
 #include "emitps.h"
+#include "emitpng.h"
 #include "img.h"
 #include "main.h"
 
@@ -27,10 +29,10 @@ printUsage()
 		"\n -d algo\tDither algorithm: TH, FS, JJN, SI [default: JJN]"
 		"\n -l algo\tLuma algorithm flags: N, S, T [default: ST]"
 		"\n -o file\tOutput file name [default: stdout]"
-		"\n -p num\t\tPixel Per Inch [default: 96]"
+		"\n -p num\t\tPixel Per Inch [default: 96], used for test-pattern"
 		"\n -s file\tStats file name [default: null]"
 		"\n -t num\t\tOverwrite luma threshold level: 0..255 [default: -1], mainly for '-d TH'"
-		"\n -v\t\tDisplay version info"
+		"\n -V\t\tDisplay version info"
 		"\n -?\t\tDisplay this help message"
 	);
 
@@ -69,6 +71,9 @@ printUsage()
 		"be used to verify and calibrate the printer output. The shape should be\n"
 		"a perfect circle within a perfect square\n"
 		"\n"
+		"If the output file extension is '.png' the output will be stored as a\n"
+		"file!\n"
+		"\n"
 	);
 }
 
@@ -81,97 +86,120 @@ printVersion()
 	printf(LICENSE "\n\n");
 }
 
+static void
+printError(std::string str)
+{
+	fprintf(stderr, "\n" APPNAME ": Error: %s\n", str.c_str());
+}
+
 int
 main(int argc, char** argv)
 {
 	FILE* out = stdout;
 	FILE* ana = nullptr;
-	std::string lumaAlgo("ST");
-	std::string chromaAlgo("C");
-	std::string ditherAlgo("JJN");
-	int ppi = 96;
-	int th = 128;
-	int border = 0;
-	int overTh = -1;
+	int*  buf = nullptr;
+	int rc = 1;
 
-	for(int o; (o = getopt(argc, argv, "?b:c:d:l:o:p:s:t:v")) != -1; )
-		switch(o) {
-			case '?': printUsage(); return 0;
-			case 'b': border = (int)strtoul(optarg, nullptr, 0); break;
-			case 'c': chromaAlgo = optarg; break;
-			case 'd': ditherAlgo = optarg; break;
-			case 'l': lumaAlgo = optarg; break;
-			case 'o': out = fopen(optarg, "wb"); break;
-			case 'p': ppi = (int)strtoul(optarg, nullptr, 0); break;
-			case 's': ana = fopen(optarg, "wb"); break;
-			case 't': overTh = (int)strtoul(optarg, nullptr, 0); break;
-			case 'v': printVersion(); return 0;
-		}
+	try {
+		std::string outName("");
+		std::string lumaAlgo("ST");
+		std::string chromaAlgo("C");
+		std::string ditherAlgo("JJN");
+		int ppi = 96;
+		int th = 128;
+		int border = 0;
+		int overTh = -1;
 
-	if(optind == argc) {
-		printUsage();
-		return 1;
-	}
-
-	if(not out) {
-		fprintf(stderr, "Cannot open output file -- Aborting..");
-		return 2;
-	}
-
-	auto fname = argv[optind];
-
-	// .........................................................................
-
-	int width = 0, height = 0;
-	auto buf = loadFile(fname, chromaAlgo, width, height, ppi);
-	if(not buf) {
-		fprintf(stderr, "Image decode error -- Aborting..");
-		return 3;
-	}
-
-	Img<int> img = Img<int>(buf, width, height);
-
-	// .........................................................................
-
-	Stat stat = {};
-	analyse(img, stat);
-
-	while(lumaAlgo != "N") {
-		if(stat.unique <= 32)
-			// too few unique colours, no point trying to improve the image
-			break;
-
-		if(lumaAlgo.find("S") != std::string::npos)
-			if(255 - (stat.maxLuma - stat.minLuma) > 16) {
-				stretch(img, stat);
-				analyse(img, stat);	// update the stats
+		for(int o; (o = getopt(argc, argv, ":?b:c:d:l:o:p:s:t:V")) != -1; )
+			switch(o) {
+				case '?': printUsage(); return 0;
+				case 'b': border = (int)strtoul(optarg, nullptr, 0); break;
+				case 'c': chromaAlgo = optarg; break;
+				case 'd': ditherAlgo = optarg; break;
+				case 'l': lumaAlgo = optarg; break;
+				case 'o': out = fopen(optarg, "wb"); outName = {optarg}; break;
+				case 'p': ppi = (int)strtoul(optarg, nullptr, 0); break;
+				case 's': ana = fopen(optarg, "wb"); break;
+				case 't': overTh = (int)strtoul(optarg, nullptr, 0); break;
+				case 'V': printVersion(); return 0;
 			}
 
-		if(lumaAlgo.find("T") != std::string::npos)
-			th = stat.avrLuma;
+		if(optind == argc) {
+			printError("Missing Source Image File");
+			printUsage();
+			return 1;
+		}
 
-		break;
+		if(not out)
+			throw std::string("Cannot open output file");
+
+		auto fname = argv[optind];
+
+		// .........................................................................
+
+		int width = 0, height = 0;
+		buf = loadFile(fname, chromaAlgo, width, height, ppi);
+		if(not buf)
+			throw std::string("Cannot load Source Image File ") + fname;
+
+		Img<int> img = Img<int>(buf, width, height);
+
+		// .........................................................................
+
+		Stat stat = {};
+		analyse(img, stat);
+
+		if(std::string("NST").find_first_of(lumaAlgo) == std::string::npos)
+			throw "Unrecognised luma-algorithm flag(s) " + lumaAlgo;
+
+		while(lumaAlgo != "N") {
+			if(stat.unique <= 32)
+				// too few unique colours, no point trying to improve the image
+				break;
+
+			if(lumaAlgo.find("S") != std::string::npos)
+				if(255 - (stat.maxLuma - stat.minLuma) > 16) {
+					stretch(img, stat);
+					analyse(img, stat);	// update the stats
+				}
+
+			if(lumaAlgo.find("T") != std::string::npos)
+				th = stat.avrLuma;
+
+			break;
+		}
+
+		if(ana)
+			emitstats(ana, stat);
+
+		// .........................................................................
+
+		if(overTh >= 0x00 and overTh <= 0xff) {
+			if(lumaAlgo.find("T") != std::string::npos)
+				throw "Cannot use -t " + std::to_string(overTh) + " and -l T together";
+			th = overTh;
+		}
+
+		dither(img, th, ditherAlgo);
+
+		// .........................................................................
+
+		drawBorder(img, border);
+
+		if(outName.rfind(".png", outName.length() - 4, 4) != std::string::npos)
+			emitPng(outName, img);
+		else
+			emitPs(out, img);
+
+		rc = 0;
+
+	} catch(std::string& str) {
+		printError(str);
+	} catch(std::exception& e) {
+		printError(e.what());
+	} catch(...) {
+		printError("Internal Error");
 	}
-
-	if(ana)
-		emitstats(ana, stat);
-
-	// .........................................................................
-
-	if(overTh >= 0x00 and overTh <= 0xff) {
-		if(lumaAlgo.find("T") != std::string::npos)
-			fprintf(stderr, "Cannot use -t %i and -l T together -- Aborting..", overTh);
-		th = overTh;
-	}
-
-	if(dither(img, th, ditherAlgo)) {
-		fprintf(stderr, "Unrecognised dither algorithm '%s' -- Aborting..", ditherAlgo.c_str());
-		return 5;
-	}
-
-	// .........................................................................
-
-	emitPs(out, img, ppi, border);
 
 	if(out)
 		fclose(out);
@@ -181,5 +209,5 @@ main(int argc, char** argv)
 	if(buf)
 		delete[] buf;
 
-	return 0;
+	return rc;
 }

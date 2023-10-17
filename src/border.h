@@ -4,8 +4,6 @@
 
 #pragma once
 
-#include "main.h"
 #include "img.h"
-#include <cstdio>
 
-int emitPs(FILE* out, Img<int>& img);
+int drawBorder(Img<int>& img, int border = 0);
