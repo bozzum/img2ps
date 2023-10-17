@@ -24,33 +24,33 @@ deps	= $(subst $(srcPath), $(tmpPath), $(srcs:.cpp=.d))
 
 # tools
 # ------------------------------------------------------------------------------
-CPP	= cpp
-CXX	= g++
-RC	= windres
-LD	= g++
-AWK	= awk
-PK	= upx
-CHK	= cppcheck
-CP	= cp -f
-RM	= rm -f
-MD	= mkdir -p
+CPP		= cpp
+CXX		= g++
+RC		= windres
+LD		= g++
+AWK		= awk
+PK		= upx
+CHK		= cppcheck
+CP		= cp -f
+RM		= rm -f
+MD		= mkdir -p
 
 # configuration
 # ------------------------------------------------------------------------------
-ccOpt		+= -Wall -Wextra -Wpedantic -Wformat=2 -Wnull-dereference \
-			   -Wlogical-op -Winline -Wshadow
-ccOpt		+= -I $(incPath) -I $(srcPath)
-RESC_OPT	+= -O coff --preprocessor=$(CPP) -I $(incPath) -I $(srcPath) -I $(resPath)
+ccOpt	+= -Wall -Wextra -Wpedantic -Wformat=2 -Wnull-dereference \
+		   -Wlogical-op -Winline -Wshadow
+ccOpt	+= -I $(incPath) -I $(srcPath)
+rcOpt	+= -O coff --preprocessor=$(CPP) -I $(incPath) -I $(srcPath) -I $(resPath)
 
 ifdef DEBUG
-ccOpt		+= -g -g3 -DDEBUG
+ccOpt	+= -g -g3 -DDEBUG
 else
-ccOpt		+= -O3 -s -static -DNDEBUG
+ccOpt	+= -O3 -s -static -DNDEBUG
 endif
 
 ifeq ($(OS),Windows_NT)
-objs		+= $(orcs)
-app			:= $(addsuffix .exe, $(app))
+objs	+= $(orcs)
+app		:= $(addsuffix .exe, $(app))
 endif
 
 # targets
@@ -63,7 +63,7 @@ all: $(app)
 release: clean all
 ifneq (, $(shell which $(PK)))
 	@echo [upx] $(app)
-	@$(PK) --best --no-color $(app)
+	@$(PK) --best --brute -q --no-color $(app)
 else
 	@echo "***** No '$(CHK)' installed... *****"
 endif
@@ -106,7 +106,7 @@ $(tmpPath)/%.o: $(srcPath)/%.cpp $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
 
 $(tmpPath)/%.ro: $(resPath)/%.rc $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
 	@echo [rc ] $<
-	@$(RC) $(RESC_OPT) $< $@
+	@$(RC) $(rcOpt) $< $@
 
 # dependencies
 # ..............................................................................
