@@ -18,4 +18,4 @@
 // Returns:
 //   Returns 0 on success, otherwise it throws an exception.
 //
-int emitPs(FILE* out, Img<int>& img);
+int emitPs(FILE* out, const Img<int>& img);

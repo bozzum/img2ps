@@ -90,7 +90,7 @@ printVersion()
 }
 
 static void
-printError(std::string str)
+printError(const std::string& str)
 {
 	fprintf(stderr, "\n" APPNAME ": Error: %s\n", str.c_str());
 }

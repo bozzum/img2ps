@@ -17,7 +17,7 @@ adjustPx(Img<int>& img, const Pt& pt, const Coeff& c, int err)
 }
 
 static inline void
-calcPx(Img<int>& img, const Pt& pt, Coeff m[3][5], int th)
+calcPx(Img<int>& img, const Pt& pt, const Coeff m[3][5], int th)
 {
 	// calculate new pixel
 	int i = (pt.y * img.w) + pt.x;

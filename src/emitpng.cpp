@@ -7,7 +7,7 @@
 #include "emitpng.h"
 
 int
-emitPng(const std::string& filename, Img<int>& img)
+emitPng(const std::string& filename, const Img<int>& img)
 {
 	const uint8_t WHITE = 0xff;
 	const uint8_t BLACK = 0x00;
@@ -25,7 +25,7 @@ emitPng(const std::string& filename, Img<int>& img)
 		}
 	}
 
-#	// now we just let the encoder do the work
+	// now we just let the encoder do the work
 	auto rc = lodepng::encode(filename, dst, img.w, img.h);
 	if(rc) {
 		delete[] dst;

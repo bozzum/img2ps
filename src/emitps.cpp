@@ -10,7 +10,7 @@
 #include "emitps.h"
 
 int
-emitPs(FILE* out, Img<int>& img)
+emitPs(FILE* out, const Img<int>& img)
 {
 	if(not out)
 		throw std::string("emitPs(nullptr)");

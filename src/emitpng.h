@@ -18,4 +18,4 @@
 // Returns:
 //   Returns 0 on success, otherwise it throws an exception.
 //
-int emitPng(const std::string& filename, Img<int>& img);
+int emitPng(const std::string& filename, const Img<int>& img);
