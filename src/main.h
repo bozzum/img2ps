@@ -16,8 +16,3 @@
 #define AUTHOR			"Patric Keller"
 #define COMPANY			"BozzumDesign (" AUTHOR ")"
 #define LICENSE			PROD_NAME " is made available under the MIT License"
-
-typedef struct {
-	int		num;
-	int		den;
-} Coeff;

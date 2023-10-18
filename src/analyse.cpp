@@ -13,6 +13,9 @@ analyse(const Img<int>& img, Stat& stat)
 		stat = {};
 		auto area = img.w * img.h;
 
+		if(not area)
+			throw std::runtime_error("Invalid image size");
+
 		// analysis: quality
 		for(int n = 0; n < area; n++) {
 			auto val = img.data[n];

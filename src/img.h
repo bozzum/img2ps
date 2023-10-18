@@ -4,6 +4,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cstdint>
 #include <cstdlib>
 
@@ -19,6 +20,7 @@ typedef enum {
 	ColBlack	= 0x00
 }					Colour;
 
+// Class Pt
 class Pt {
 public:
 	int		x;
@@ -27,6 +29,7 @@ public:
 			Pt(int xPos, int yPos) : x(xPos), y(yPos) { return; }
 };
 
+// Class Img
 template<typename T>
 class Img {
 public:
@@ -53,20 +56,40 @@ public:
 
 	Img&	operator=(const Img&) = delete;
 
+			// Method: set
+			// Sets the entire image to fillVal gray value.
+			//
+			// Parameters:
+			//   fillVal -- Colour (gray) fill value
+			//
 	void	set(PxVal fillVal = ColWhite) {
 				if(data)
 					for(auto n = area; n--; )
 						data[n] = static_cast<T>(fillVal);
 			}
 
-			// draws a pixel.
+			// Method: pix
+			// Draws a pixel.
+			//
+			// Parameters:
+			//   p -- Location of the pixel
+			//   v -- Colour (gray) value of the pixel
+			//
 	void	pix(Pt p, PxVal v) {
 				if(data and p.x >= 0 and p.x < w and p.y >= 0 and p.y < h)
 					data[p.x + (p.y * w)] = static_cast<T>(v);
 			}
 
-			// draws a line. function uses the "midpoint algorithm", as developed
+			// Method: line
+			// Draws a line. Method uses the "midpoint algorithm", as developed
 			// by PITTEWAY and  VAN AKEN, based on the BRESENHAM method.
+			//
+			// Parameters:
+			//   p0 -- Start-point of the line
+			//   p1 -- End-point of the line
+			//   val -- Colour (gray) value of the line
+			//   pat -- line pattern
+			//
 	void	line(Pt p0, Pt p1, PxVal val = ColBlack, Pattern pat = 0xffff) {
 				if(p0.x > p1.x) {
 					// points need to be in canonical order horizontally.
@@ -127,16 +150,23 @@ public:
 					pix(p1, val);
 			}
 
-			// draws a rectangle.
+			// Method: rect
+			// Draws a rectangle.
+			//
+			// Parameters:
+			//   p0 -- Top-left coordinate of the rectangle
+			//   p1 -- Bottom-right coordinate of the rectangle
+			//   val -- Line colour (gray scale)
+			//   doFill -- if true, draws a filled rectangle
+			//
+			// Note:
+			// Coordinates can be swapped.
+			//
 	void	rect(Pt p0, Pt p1, PxVal val = ColBlack, bool doFill = false) {
-				if(p0.x > p1.x) {
-					auto t = p0.x;
-					p0.x = p1.x; p1.x = t;
-				}
-				if(p0.y > p1.y) {
-					auto t = p0.y;
-					p0.y = p1.y; p1.y = t;
-				}
+				if(p0.x > p1.x)
+					std::swap(p0.x, p1.x);
+				if(p0.y > p1.y)
+					std::swap(p0.y, p1.y);
 
 				line(p0, Pt(p1.x, p0.y), val);
 
@@ -151,10 +181,19 @@ public:
 				line(Pt(p0.x, p1.y), p1, val);
 			}
 
-			// draws an ellipse. the implementation follows a suggestion of
+			// Method: ellipse
+			// Draws an ellipse. The implementation follows a suggestion of
 			// M. Douglas McIlroy ("There Is No Royal Road to Programs /
 			// A Trilogy on Raster Ellipses and Programming Methodology",
 			// AT&T Bell Labs).
+			//
+			// Parameters:
+			//   org -- Top-left corner of enclosing box
+			//   dimX -- Width of the enclosing box
+			//   dimY --  Height of the enclosing box
+			//   val -- Pixel gray value of the line
+			//   doFill -- if true, creates a filled ellipse
+			//
 	void	ellipse(Pt org, int dimX, int dimY, PxVal val = ColBlack, bool doFill = false) {
 				int sqrW  = dimX * dimX;
 				int sqrH  = dimY * dimY;

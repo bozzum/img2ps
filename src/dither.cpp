@@ -4,11 +4,15 @@
 
 #include "dither.h"
 
+using Coeff = struct Coeff_st { int num; int den; };
+
 static inline void
 adjustPx(Img<int>& img, const Pt& pt, const Coeff& c, int err)
 {
 	if(pt.x < 0 or pt.x >= img.w or pt.y < 0 or pt.y >= img.h)
+		// pixel outside the image -- do nothing
 		return;
+
 	img.data[(pt.y * img.w) + pt.x] += (err * c.num) / c.den;
 }
 
@@ -33,6 +37,7 @@ calcPx(Img<int>& img, const Pt& pt, Coeff m[3][5], int th)
 int
 dither(Img<int>& img, int th, const std::string& algo)
 {
+	// coefficients for various dither methods
 	Coeff mTH[3][5] = { { {0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 1} },
 						{ {0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 1} },
 						{ {0, 1}, {0, 1}, {0, 1}, {0, 1}, {0, 1} } };
@@ -58,6 +63,7 @@ dither(Img<int>& img, int th, const std::string& algo)
 	else
 		throw "Unrecognised dither algorithm " + algo;
 
+	// just run over the entire image from top-left to bottom-right
 	for(int y = 0; y < img.h; y++)
 		for(int x = 0; x < img.w; x++) {
 			Pt p{x, y};

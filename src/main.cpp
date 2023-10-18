@@ -41,38 +41,41 @@ printUsage()
 		"TH -- Threshold. This is the most simplest way of dithering, as it only\n"
 		"has a single threshold for deciding between black and white. This algo-\n"
 		"rithm has limited use, mainly for dithering text or drawings. Use the\n"
-		"-t <val> option to optimize the threshold level\n"
+		"-t <val> option to optimize the threshold level.\n"
 		"FS -- Floyd-Steinberg. It was first published in 1976 by Robert W. \n"
 		"Floyd and Louis Steinberg. It is an Error-diffusion dithering that \n"
-		"diffuses the quantization error to neighboring pixels\n"
+		"diffuses the quantization error to neighboring pixels.\n"
 		"JJN -- Jarvis, Judice & Ninke. This algorithm tends to produce coarser\n"
 		"patterns than the Floyd-Steinberg Dithering method, but with fewer\n"
-		"artifacts\n"
-		"SI -- Sierra. Similar to Jarvis algorithm\n"
+		"artifacts.\n"
+		"SI -- Sierra. Similar to Jarvis algorithm, probably coarsest of the\n"
+		"three algorithms.\n"
+		"Note: you can get a good first impression of the differences between\n"
+		"the dither algorithms by using the test pattern as a source.\n"
 		"\n"
 		"Luma Algorithm Flags:\n"
 		"N -- No Luma Threshold or Image Optimisation. This flag cannot be com-\n"
 		"bined with any other luma flags.\n"
 		"S -- Stretches the luma range of the image. This is useful for images\n"
-		"with low contrast. This algorithm does not change the B/W threshold\n"
+		"with low contrast. This algorithm does not change the B/W threshold.\n"
 		"T -- Change the B/W threshold to the average luma value. This can be\n"
-		"particularly effective if combines with the 'S' (stretch) algorithm\n"
+		"particularly effective if combined with the 'S' (stretch) algorithm.\n"
 		"\n"
 		"Chroma to Luma Conversion Algorithm (PNG input only):\n"
-		"C -- CCIR 601 (R: 0.299, G: 0.587, B: 0.114)\n"
-		"B -- BT709 (R: 0.2126, G: 0.7152, B: 0.0722)\n"
-		"S -- SMPTE 240M (R: 0.212, G: 0.701, B: 0.087)\n"
+		"C -- CCIR 601 (R: 0.299, G: 0.587, B: 0.114).\n"
+		"B -- BT709 (R: 0.2126, G: 0.7152, B: 0.0722).\n"
+		"S -- SMPTE 240M (R: 0.212, G: 0.701, B: 0.087).\n"
 		"\n"
 		"If a Stats file name has been specified, img2ps will output an additional\n"
 		"GRAP file (Kernighan and Bentley's language for typesetting graphs),\n"
-		"which can be used to produce a histogram display of the source image file\n"
+		"which can be used to produce a histogram display of the source image file.\n"
 		"\n"
 		"The internal test pattern generator (\"::test\" as input file name) can\n"
 		"be used to verify and calibrate the printer output. The shape should be\n"
-		"a perfect circle within a perfect square\n"
+		"a perfect circle within a perfect square.\n"
 		"\n"
 		"If the output file extension is '.png' the output will be stored as a\n"
-		"file!\n"
+		"file! Bonus feature...!\n"
 		"\n"
 	);
 }
@@ -110,7 +113,8 @@ main(int argc, char** argv)
 		int border = 0;
 		int overTh = -1;
 
-		for(int o; (o = getopt(argc, argv, ":?b:c:d:l:o:p:s:t:V")) != -1; )
+		// get command-line options
+		for(int o; (o = getopt(argc, argv, "?b:c:d:l:o:p:s:t:V")) != -1; )
 			switch(o) {
 				case '?': printUsage(); return 0;
 				case 'b': border = (int)strtoul(optarg, nullptr, 0); break;
@@ -124,6 +128,7 @@ main(int argc, char** argv)
 				case 'V': printVersion(); return 0;
 			}
 
+		// we *need* an input image file...
 		if(optind == argc) {
 			printError("Missing Source Image File");
 			printUsage();
@@ -136,6 +141,7 @@ main(int argc, char** argv)
 		auto fname = argv[optind];
 
 		// .........................................................................
+		// load the input file or create a test pattern
 
 		int width = 0, height = 0;
 		buf = loadFile(fname, chromaAlgo, width, height, ppi);
@@ -145,6 +151,7 @@ main(int argc, char** argv)
 		Img<int> img = Img<int>(buf, width, height);
 
 		// .........................................................................
+		// analyse the image and make adjustments, if desired
 
 		Stat stat = {};
 		analyse(img, stat);
@@ -169,10 +176,12 @@ main(int argc, char** argv)
 			break;
 		}
 
+		// if desired, write out GRAP file with the statistics
 		if(ana)
 			emitstats(ana, stat);
 
 		// .........................................................................
+		// now do the main thing: dither the image
 
 		if(overTh >= 0x00 and overTh <= 0xff) {
 			if(lumaAlgo.find("T") != std::string::npos)
@@ -184,8 +193,10 @@ main(int argc, char** argv)
 
 		// .........................................................................
 
+		// draw a border, if desired
 		drawBorder(img, border);
 
+		// write output data
 		if(outName.rfind(".png", outName.length() - 4, 4) != std::string::npos)
 			emitPng(outName, img);
 		else
@@ -201,6 +212,7 @@ main(int argc, char** argv)
 		printError("Internal Error");
 	}
 
+	// clean up
 	if(out)
 		fclose(out);
 	if(ana)

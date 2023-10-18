@@ -12,6 +12,8 @@ emitPng(const std::string& filename, Img<int>& img)
 	const uint8_t WHITE = 0xff;
 	const uint8_t BLACK = 0x00;
 
+	// first, we need to convert the integer-based dither buffer to an 8bit
+	// RGBA buffer, which can be fed to the PNG encoder
 	auto area = img.w * img.h;
 	auto dst = new uint8_t[area * 4];
 	memset(dst, WHITE, area * 4);
@@ -23,6 +25,7 @@ emitPng(const std::string& filename, Img<int>& img)
 		}
 	}
 
+#	// now we just let the encoder do the work
 	auto rc = lodepng::encode(filename, dst, img.w, img.h);
 	if(rc) {
 		delete[] dst;

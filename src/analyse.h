@@ -22,7 +22,7 @@ typedef struct {
 } Stat;
 
 // Function: analyse
-// Analyses basic image properties, like minimum, maximum and average lume values,
+// Analyses basic image properties, like minimum, maximum and average luma values,
 // plus some data about their distribution. This data will also be used to generate
 // the histogram with <emitstats>.
 //

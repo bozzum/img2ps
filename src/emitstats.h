@@ -8,4 +8,14 @@
 #include "main.h"
 #include "analyse.h"
 
+// Function: emitstats
+// Renders the statistic data of the image to a GRAP file.
+//
+// Parameters:
+//   out - Handle of the GRAP output file
+//   stat - Statistic data
+//
+// Returns:
+//   Returns 0.
+//
 int emitstats(FILE* out, const Stat& stat);

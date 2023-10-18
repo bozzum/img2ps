@@ -9,18 +9,12 @@ drawBorder(Img<int>& img, int border)
 {
 	// Frame
 	if(border) {
-		Pt tl = {0, 0}, tr = {img.w -1, 0};
-		Pt bl = {0, img.h -1}, br = {img.w -1, img.h -1};
+		Pt tl = {0, 0}, br = {img.w -1, img.h -1};
 
 		while(border-- > 0) {
-			img.line(tl, tr);
-			img.line(tr, br);
-			img.line(br, bl);
-			img.line(bl, tl);
+			img.rect(tl, br);
 
 			tl.x++; tl.y++;
-			tr.x--; tr.y++;
-			bl.x++; bl.y--;
 			br.x--; br.y--;
 		}
 	}

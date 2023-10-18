@@ -100,7 +100,7 @@ $(app): $(objs) ; @-$(MD) $(dir $@)
 # ------------------------------------------------------------------------------
 $(tmpPath)/%.o: $(srcPath)/%.cpp $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)
 	@echo [c++] $<
-	@$(CXX) $(ccOpt) -std=c++17 -c -o $@ $<
+	@$(CXX) $(ccOpt) -std=c++20 -c -o $@ $<
 	@$(CXX) -I $(incPath) -I $(srcPath) -MM -MG -MP -MT $@ -MF $(tmpPath)/$*.d $<
 
 $(tmpPath)/%.ro: $(resPath)/%.rc $(MAKEFILE_LIST) ; @-$(MD) $(dir $@)

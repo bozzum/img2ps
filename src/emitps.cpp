@@ -15,8 +15,6 @@ emitPs(FILE* out, Img<int>& img)
 	if(not out)
 		throw std::string("emitPs(nullptr)");
 
-	img.h &= ~1;
-
 	// pack image into a bit-buffer; lines are 8-bit aligned
 	auto w8 = (img.w + 7) /8;
 	auto bitbuf = new uint8_t[w8 * img.h];
@@ -37,7 +35,7 @@ emitPs(FILE* out, Img<int>& img)
 	double w = (double)img.w;
 	double h = (double)img.h;
 	double l = 0.0;
-	double t = 0.0;//-24.0;
+	double t = 0.0;
 	auto tm = time(nullptr);
 	const char* now = asctime(localtime(&tm));
 
@@ -65,6 +63,7 @@ emitPs(FILE* out, Img<int>& img)
 	fprintf(out, "{currentfile bitstr readhexstring pop}\n");
 	fprintf(out, "image\n");
 
+	// write bitbuffer contents as HEX strings
 	const uint8_t* buf = bitbuf;
 	for(int y = img.h; y; --y) {
 		int c = w8;

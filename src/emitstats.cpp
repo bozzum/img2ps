@@ -7,6 +7,7 @@
 int
 emitstats(FILE* out, const Stat& stat)
 {
+	// write the GRAP histogram
 	fprintf(out, ".G1\n");
 	fprintf(out, "frame invis left solid bot solid\n");
 	fprintf(out, "label left \"Samples\"\n");
@@ -16,6 +17,7 @@ emitstats(FILE* out, const Stat& stat)
 		fprintf(out, "%i\n", stat.lCnt[i]);
 	fprintf(out, ".G2\n");
 
+	// write the statistic data
 	fprintf(out, ".EQ\ndelim $$\n.EN\n");
 	fprintf(out, "$Luma sub min = %i$\n.br\n", stat.minLuma);
 	fprintf(out, "$Luma sub max = %i$\n.br\n", stat.maxLuma);

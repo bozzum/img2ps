@@ -9,9 +9,9 @@
 #include "img.h"
 
 // Function: chromaConv
-//
-//
-//
+// Converts a colour image (coming from the PNG decoder) from RGB to Luma, using
+// various conversion parameters. It also converts from 8bit to integer buffer
+// layout.
 //
 // Parameters:
 //   pSrc - Source image buffer (RGBA, 8bit)
@@ -19,6 +19,6 @@
 //   algo - Conversion algorithm (C, B or S)
 //
 // Returns:
-//   Returns 0
+//   Returns 0 on success, otherwise it throws an exception.
 //
 int chromaConv(const uint8_t* pSrc, Img<int>& dst, const std::string& algo);

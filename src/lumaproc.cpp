@@ -11,6 +11,7 @@ stretch(Img<int>& img, const Stat& stat)
 	auto off = -stat.minLuma;
 	auto den = stat.maxLuma + off;
 
+	// stretch the luma range to fill the full range
 	for(int i = 0; i < area; i++)
 		img.data[i] = ((img.data[i] + off) * 255) / den;
 
