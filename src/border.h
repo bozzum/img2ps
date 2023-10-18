@@ -6,4 +6,16 @@
 
 #include "img.h"
 
+// Function: drawBorder
+// Draws a border around the image. The border grows 'inwards', in the sense that
+// the original dimensions of the image remain unchanged, but the border overwrites
+// the outer parts.
+//
+// Parameters:
+//   img - Source image buffer
+//   border - Width of the border in pixel, defaults to 0
+//
+// Returns:
+//   Returns 0
+//
 int drawBorder(Img<int>& img, int border = 0);

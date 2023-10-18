@@ -8,4 +8,18 @@
 #include "img.h"
 #include "main.h"
 
+// Function: dither
+//
+//
+//
+//
+// Parameters:
+//   img - Source image buffer
+//   th - Threshold to determine if a pixel is black or white. This parameter has
+//        a rather dynamic characteristic.
+//   algo - Dither algorithm (TH, FS, JJN or SI)
+//
+// Returns:
+//   Returns 0
+//
 int dither(Img<int>& img, int th, const std::string& algo);
