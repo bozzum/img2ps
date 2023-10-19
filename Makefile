@@ -70,10 +70,11 @@ endif
 	@$(RM) -r -d $(tmpPath)/
 
 clean:
-	@echo [rm ] $(tmpPath)/
+	@echo [rmd] $(tmpPath)/
 	@$(RM) -r -d $(tmpPath)/
 
 spotless: clean
+	@echo [rm ] $(app)/
 	@$(RM) $(app)
 
 check:
