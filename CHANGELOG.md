@@ -1,7 +1,9 @@
-# img2ps
+img2ps
+======
 Release History
 
-## Version 1.0.0 (19. Oct, 2023)
+Version 1.0.0 (19. Oct, 2023)
+-----------------------------
 * Initial Official Release
 * Source: PNG and Jpeg image files, alternatively internal pattern generator
 * Various Chroma to Luma conversion methods for PNG sources
